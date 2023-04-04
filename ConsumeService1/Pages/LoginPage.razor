@@ -1,0 +1,99 @@
+﻿@page "/"
+@using Firebase.Auth
+
+@using MudBlazor
+
+
+<h3 class="text-center">Login/Registration</h3>
+<div style="height: 1rem;"></div>
+<MudTextField Label="Email" @bind-Value="email"
+              InputStyle="color: orange;"
+              InputAdornmentStyle="focusColor: orange;" />
+
+<div style="height: 1rem;"></div>
+<MudTextField Label="Password" Type="InputType.Password" @bind-Value="password" InputStyle="color: orange;"
+              InputAdornmentStyle="focusColor: orange;" />
+<div style="height: 1rem;"></div>
+<div class="text-center">
+    <MudButton Variant="Variant.Filled" Color="Color.Secondary" OnClick="Login">Login</MudButton>
+</div>
+
+@if (loggedIn)
+{
+    NavigationManager.NavigateTo("/decryption");
+}
+else if (creating)
+{
+    NavigationManager.NavigateTo("/decryption");
+}
+else if (loggingIn)
+{
+    <h4>Logging in...</h4>
+}
+else if (!string.IsNullOrEmpty(errorMessage))
+{
+    <h4>Login Failed: @errorMessage</h4>
+}
+
+@code {
+    private const string API_KEY = "AIzaSyCvCu3ZG8g9Zl9ho2A9vGcmOWle9ld1Eb4";
+    private string email;
+    private string password;
+    private string t;
+    private bool loggingIn = false;
+    private bool loggedIn = false;
+    private bool creating = false;
+    private string errorMessage = null;
+    [Inject]
+    private NavigationManager NavigationManager { get; set; }
+    private async Task Login()
+    {
+        loggingIn = true;
+        FirebaseAuthProvider firebaseAuthProvider = new FirebaseAuthProvider(new FirebaseConfig(API_KEY));
+
+        try
+        {
+            FirebaseAuthLink firebaseAuthLink = await firebaseAuthProvider.SignInWithEmailAndPasswordAsync(email, password);
+
+            t = firebaseAuthLink.FirebaseToken;
+            loggedIn = true;
+        }
+        catch (Exception e)
+        {
+            errorMessage = e.Message;
+        }
+        
+        try
+        {
+            FirebaseAuthLink firebaseAuthLink = await firebaseAuthProvider.CreateUserWithEmailAndPasswordAsync(email, password);
+
+            t = firebaseAuthLink.FirebaseToken;
+            creating = true;
+        }
+        catch (Exception e)
+        {
+            errorMessage = e.Message;
+        }
+        finally
+        {
+            loggingIn = false;
+        }
+    }
+}
+<style>
+    body {
+        background-color: white;
+    }
+
+    h3, h4 {
+        color: #FFA500;
+    }
+
+    .text-center {
+        text-align: center;
+    }
+
+    .error {
+        color: red;
+    }
+</style>

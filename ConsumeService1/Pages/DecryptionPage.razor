@@ -1,0 +1,65 @@
+﻿@page "/decryption"
+@using ConsumeService1.Models;
+@using ConsumeService1.Services
+@using MudBlazor
+@using Newtonsoft.Json;
+@inject NavigationManager NavigationManager
+
+<div class="sidebar">
+    <NavMenu />
+</div>
+
+
+<div>
+    <h3 class="text-center">Decrypt Text</h3>
+    <div style="height: 1rem;"></div>
+    <MudTextField Label="Enter Encrypted Text" @bind-Value="encryptedText" />
+    <div style="height: 1rem;"></div>
+    <MudTextField Label="Enter Key" @bind-Value="key" />
+    <div style="height: 1rem;"></div>
+    <div class="text-center">
+        <MudButton Variant="Variant.Filled" Color="Color.Secondary" OnClick="DecryptDataAsync">Decrypt</MudButton>
+    </div>
+
+
+    @if (!string.IsNullOrEmpty(decryptedText))
+    {
+        <h4>Decrypted Text:</h4>
+        <MudTextField Multiline="true" @bind-Value="decryptedText" />
+    }
+
+</div>
+
+@code {
+    private string encryptedText;
+    private string key;
+    private string decryptedText;
+
+    [Inject] private EncryptionService _encryptionService { get; set; }
+
+    private async Task DecryptDataAsync()
+    {
+        decryptedText = await _encryptionService.DecryptDataAsync(encryptedText, key);
+        var decryptionResult = JsonConvert.DeserializeObject<DecryptionResult>(decryptedText);
+        decryptedText = decryptionResult.text;
+    }
+
+    
+}
+<style>
+    body {
+        background-color: white;
+    }
+
+    h3, h4 {
+        color: #FFA500;
+    }
+
+    .text-center {
+        text-align: center;
+    }
+
+    .error {
+        color: red;
+    }
+</style>

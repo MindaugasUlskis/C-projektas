@@ -1,0 +1,1 @@
+C:\Users\umind\source\repos\ConsumeService1\ConsumeService1\ConsumeService1.csproj;x64

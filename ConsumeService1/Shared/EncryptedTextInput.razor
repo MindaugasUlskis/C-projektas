@@ -1,0 +1,8 @@
+﻿<div>
+    <label for="encrypted-text-input">Enter Encrypted Text:</label>
+    <input type="text" id="encrypted-text-input" @bind-value="EncryptedText" />
+</div>
+
+@code {
+    [Parameter] public string EncryptedText { get; set; }
+}

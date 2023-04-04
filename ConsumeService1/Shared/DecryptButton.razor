@@ -1,0 +1,18 @@
+﻿@using ConsumeService1.Services
+
+<button @onclick="DecryptDataAsync">Decrypt</button>
+
+@code {
+    [Parameter] public string EncryptedText { get; set; }
+    [Parameter] public string Key { get; set; }
+    [Parameter] public string DecryptedText { get; set; }
+    [Parameter] public EventCallback<string> DecryptedTextChanged { get; set; }
+
+    [Inject] private EncryptionService _encryptionService { get; set; }
+
+    private async Task DecryptDataAsync()
+    {
+        DecryptedText = await _encryptionService.DecryptDataAsync(EncryptedText, Key);
+        await DecryptedTextChanged.InvokeAsync(DecryptedText);
+    }
+}

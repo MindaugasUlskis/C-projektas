@@ -1,0 +1,39 @@
+﻿
+
+
+<div class="top-row ps-3 navbar navbar-transparent navbar-dark">
+    <div class="container-fluid justify-content-end">
+            <button title="Navigation menu" class="navbar-toggler btn-dark" @onclick="ToggleNavMenu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </div>
+    </div>
+
+    <div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
+        <nav class="flex-column">
+
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="encryption">
+                    <span class="oi oi-lock-locked" aria-hidden="true"></span> Encryption
+                </NavLink>
+            </div>
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="decryption">
+                    <span class="oi oi-lock-locked" aria-hidden="true"></span> Decryption
+                </NavLink>
+            </div>
+        </nav>
+    </div>
+
+
+@code {
+    private bool collapseNavMenu = true;
+
+    private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+
+    private void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+    }
+
+}
